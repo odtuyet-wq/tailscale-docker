@@ -1,6 +1,9 @@
 # Sử dụng image Ubuntu làm base
 FROM ubuntu:20.04
 
+# Chuyển sang quyền root để cài đặt Tailscale
+USER root
+
 # Cài đặt các dependencies cần thiết
 ARG PB_VERSION=0.36.2
 RUN apt-get update && apt-get install -y \
@@ -9,7 +12,8 @@ RUN apt-get update && apt-get install -y \
     sudo \
     bash \
     wget \
-    unzip
+    unzip \
+    iptables
 
 # Tải PocketBase và kiểm tra tệp tải về
 RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip -O /tmp/pb.zip && \

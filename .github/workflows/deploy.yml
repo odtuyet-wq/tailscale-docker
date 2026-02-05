@@ -29,9 +29,9 @@ jobs:
       - name: Build and run Docker container
         run: |
           docker build -t pocketbase-with-tailscale .
-          docker run -d -p 8090:8090 --name pocketbase-with-tailscale \
-            -e TAILSCALE_CLIENT_SECRET=${{ secrets.TAILSCALE_CLIENT_SECRET }} \
-            -e TAILSCALE_CLIENT_ID=${{ secrets.TAILSCALE_CLIENT_ID }} \
+          docker run -d --cap-add=NET_ADMIN -p 8080:8080 --name pocketbase-with-tailscale \
+            -e TAILSCALE_CLIENT_SECRET=your_tailscale_client_secret \
+            -e TAILSCALE_CLIENT_ID=your_tailscale_client_id \
             -v $(pwd)/data:/pb_data \
             pocketbase-with-tailscale
 
@@ -39,3 +39,6 @@ jobs:
       - name: Get Tailscale IP
         run: |
           docker logs pocketbase-with-tailscale
+      - name: ⏳ Keep Alive
+        run: |
+          npx --yes @ongtrieuhau861457/runner-keep-alive --interval 60 --services All
