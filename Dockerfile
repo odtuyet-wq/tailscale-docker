@@ -1,5 +1,5 @@
 # Sử dụng image chính thức của PocketBase
-FROM pocketbase/pocketbase:latest
+FROM adrianmusante/pocketbase:latest
 
 # Cài đặt Tailscale
 RUN curl -fsSL https://tailscale.com/install.sh | sh
