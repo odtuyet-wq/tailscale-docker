@@ -7,11 +7,13 @@ services:
       - TAILSCALE_CLIENT_SECRET=${TAILSCALE_CLIENT_SECRET}
       - TAILSCALE_CLIENT_ID=${TAILSCALE_CLIENT_ID}
     ports:
-      - "8090:8090"
+      - "8080:8080"
     volumes:
       - ./data:/pb_data
+    cap_add:
+      - NET_ADMIN # Cấp quyền NET_ADMIN để Tailscale có thể quản lý mạng
     command: /bin/bash -c "\
       tailscaled && \
       tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && \
       ip a show dev tailscale0 && \
-      pocketbase serve --http=0.0.0.0:8090"
+      /usr/local/bin/pocketbase serve --http=0.0.0.0:8080"
