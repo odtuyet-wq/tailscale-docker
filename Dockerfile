@@ -2,20 +2,21 @@
 FROM ubuntu:20.04
 
 # Cài đặt các dependencies cần thiết
+ARG PB_VERSION=0.36.2
 RUN apt-get update && apt-get install -y \
     curl \
     iproute2 \
     sudo \
     bash \
     wget \
-    tar
+    unzip
 
 # Cài đặt PocketBase (tải PocketBase bản mới nhất) và kiểm tra từng bước
-RUN wget https://github.com/pocketbase/pocketbase/releases/download/v0.8.0/pocketbase_0.8.0_linux_amd64.tar.gz && \
+RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip && \
     ls -alh && \
-    tar -xvf pocketbase_0.8.0_linux_amd64.tar.gz && \
-    mv pocketbase /usr/local/bin/ && \
-    rm pocketbase_0.8.0_linux_amd64.tar.gz
+    unzip /tmp/pb.zip -d /pb/ && \
+    mv /pb/pocketbase /usr/local/bin/ && \
+    rm /tmp/pb.zip
 
 # Cài đặt Tailscale
 RUN curl -fsSL https://tailscale.com/install.sh | sh
@@ -28,4 +29,4 @@ CMD /bin/bash -c "\
     tailscaled && \
     tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && \
     ip a show dev tailscale0 && \
-    /usr/local/bin/pocketbase serve --http=0.0.0.0:8090"
+    /usr/local/bin/pocketbase serve --http=0.0.0.0:8080"
