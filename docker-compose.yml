@@ -14,4 +14,4 @@ services:
       tailscaled && \
       tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && \
       ip a show dev tailscale0 && \
-      /pocketbase/pocketbase serve --http=0.0.0.0:8090"
+      pocketbase serve --http=0.0.0.0:8090"
