@@ -11,9 +11,9 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip
 
-# Cài đặt PocketBase (tải PocketBase bản mới nhất) và kiểm tra từng bước
-RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip && \
-    ls -alh && \
+# Tải PocketBase và kiểm tra tệp tải về
+RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip -O /tmp/pb.zip && \
+    ls -alh /tmp && \
     unzip /tmp/pb.zip -d /pb/ && \
     mv /pb/pocketbase /usr/local/bin/ && \
     rm /tmp/pb.zip
