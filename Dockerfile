@@ -1,4 +1,4 @@
-# Sử dụng image chính thức của PocketBase
+# Sử dụng image không chính thức của PocketBase từ adrianmusante
 FROM adrianmusante/pocketbase:latest
 
 # Cài đặt Tailscale
@@ -11,4 +11,8 @@ RUN mkdir /pb_data
 RUN apt-get update && apt-get install -y iproute2
 
 # Lệnh khởi động container với PocketBase và Tailscale
-CMD /bin/bash -c "tailscaled && tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && ip a show dev tailscale0 && /pocketbase/pocketbase serve --http=0.0.0.0:8090"
+CMD /bin/bash -c "\
+    tailscaled && \
+    tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && \
+    ip a show dev tailscale0 && \
+    /pocketbase/pocketbase serve --http=0.0.0.0:8090"

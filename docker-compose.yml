@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   pocketbase:
     build: .
@@ -10,4 +10,8 @@ services:
       - "8090:8090"
     volumes:
       - ./data:/pb_data
-    command: /bin/bash -c "tailscaled && tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && ip a show dev tailscale0 && /pocketbase/pocketbase serve --http=0.0.0.0:8090"
+    command: /bin/bash -c "\
+      tailscaled && \
+      tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && \
+      ip a show dev tailscale0 && \
+      /pocketbase/pocketbase serve --http=0.0.0.0:8090"
