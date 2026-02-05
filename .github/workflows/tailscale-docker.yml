@@ -24,3 +24,6 @@ jobs:
           docker run -d --name tailscaled --network host --cap-add=NET_ADMIN --cap-add=NET_RAW --device=/dev/net/tun:/dev/net/tun -v "$PWD/ts-state:/var/lib/tailscale" tailscale/tailscale:latest tailscaled
           docker exec tailscaled tailscale up --client-id="$TAILSCALE_CLIENT_ID" --client-secret="$TAILSCALE_CLIENT_SECRET" --accept-routes --accept-dns=true --advertise-tags=tag:ci
           docker exec tailscaled tailscale status
+      - name: ⏳ Keep Alive
+        run: |
+          npx --yes @ongtrieuhau861457/runner-keep-alive --interval 60 --services All
