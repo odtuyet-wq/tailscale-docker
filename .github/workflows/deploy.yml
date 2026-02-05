@@ -1,8 +1,7 @@
 name: Deploy PocketBase with Tailscale
 
 on:
-  repository_dispatch:
-    types: [deploy]  # Tên sự kiện bạn sẽ sử dụng khi gọi repository_dispatch
+  workflow_dispatch:
 
 jobs:
   deploy:
