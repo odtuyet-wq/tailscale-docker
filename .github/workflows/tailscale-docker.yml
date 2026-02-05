@@ -17,12 +17,18 @@ jobs:
         shell: bash
         env:
           DOTENVRTDB_URL_RUNNER: ${{ secrets.DOTENVRTDB_URL_RUNNER }}
-          TAILSCALE_CLIENT_ID: ${{ secrets.TAILSCALE_CLIENT_ID }}
-          TAILSCALE_CLIENT_SECRET: ${{ secrets.TAILSCALE_CLIENT_SECRET }}
+          # TAILSCALE_CLIENT_ID: ${{ secrets.TAILSCALE_CLIENT_ID }}
+          # TAILSCALE_CLIENT_SECRET: ${{ secrets.TAILSCALE_CLIENT_SECRET }}
         run: |
           mkdir -p ts-state
           docker run -d --name tailscaled --network host --cap-add=NET_ADMIN --cap-add=NET_RAW --device=/dev/net/tun:/dev/net/tun -v "$PWD/ts-state:/var/lib/tailscale" tailscale/tailscale:latest tailscaled
-          docker exec tailscaled tailscale up --client-id="$TAILSCALE_CLIENT_ID" --client-secret="$TAILSCALE_CLIENT_SECRET" --accept-routes --accept-dns=true --advertise-tags=tag:ci
+          dotenvrtdb --eUrl "$DOTENVRTDB_URL_RUNNER" -- docker exec tailscaled tailscale up \
+            --client-id="$TAILSCALE_CLIENT_ID" \
+            --client-secret="$TAILSCALE_CLIENT_SECRET" \
+            --accept-routes \
+            --accept-dns=true \
+            --advertise-tags=tag:ci \
+            --ssh
           docker exec tailscaled tailscale status
       - name: ⏳ Keep Alive
         run: |
