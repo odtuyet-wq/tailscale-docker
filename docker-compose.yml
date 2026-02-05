@@ -1,0 +1,13 @@
+version: '3'
+services:
+  pocketbase:
+    build: .
+    container_name: pocketbase-with-tailscale
+    environment:
+      - TAILSCALE_CLIENT_SECRET=${TAILSCALE_CLIENT_SECRET}
+      - TAILSCALE_CLIENT_ID=${TAILSCALE_CLIENT_ID}
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./data:/pb_data
+    command: /bin/bash -c "tailscaled && tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && ip a show dev tailscale0 && /pocketbase/pocketbase serve --http=0.0.0.0:8090"
