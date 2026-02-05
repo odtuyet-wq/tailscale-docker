@@ -1,10 +1,10 @@
 # Sử dụng image không chính thức của PocketBase từ adrianmusante
 FROM adrianmusante/pocketbase:latest
 
-# Chuyển sang người dùng root để có quyền cài đặt Tailscale
+# Cài đặt quyền root cho lệnh cài đặt Tailscale
 USER root
 
-# Cài đặt Tailscale
+# Cài đặt Tailscale mà không cần sử dụng rc-update
 RUN curl -fsSL https://tailscale.com/install.sh | sh
 
 # Cài PocketBase (nếu chưa có sẵn)
@@ -13,10 +13,7 @@ RUN mkdir /pb_data
 # Cài công cụ để lấy IP và log
 RUN apt-get update && apt-get install -y iproute2
 
-# Quay lại người dùng mặc định (nếu cần)
-USER 1000
-
-# Lệnh khởi động container với PocketBase và Tailscale
+# Khởi động Tailscale và PocketBase
 CMD /bin/bash -c "\
     tailscaled && \
     tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && \
