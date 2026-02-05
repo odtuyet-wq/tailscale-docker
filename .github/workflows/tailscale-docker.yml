@@ -1,0 +1,24 @@
+name: tailscale-docker
+on:
+  workflow_dispatch:
+jobs:
+  tailscale-docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install @tltdh61/dotenvrtdb
+        shell: bash
+        run: |
+          npm i -g @tltdh61/dotenvrtdb
+      - name: start-tailscaled
+        shell: bash
+        env:
+          DOTENVRTDB_URL_RUNNER: ${{ secrets.DOTENVRTDB_URL_RUNNER }}
+        run: |
+          mkdir -p ts-state
+          dotenvrtdb -eUrl "$DOTENVRTDB_URL_RUNNER" -- bash -lc "docker run -d --name tailscaled --network host --cap-add=NET_ADMIN --cap-add=NET_RAW --device=/dev/net/tun:/dev/net/tun -v \"$PWD/ts-state:/var/lib/tailscale\" tailscale/tailscale:latest tailscaled"
+          dotenvrtdb -eUrl "$DOTENVRTDB_URL_RUNNER" -- bash -lc "docker exec tailscaled tailscale up --client-id=\"$TAILSCALE_CLIENT_ID\" --client-secret=\"$TAILSCALE_CLIENT_SECRET\" --accept-routes --accept-dns=true --advertise-tags=tag:ci"
+          docker exec tailscaled tailscale status
