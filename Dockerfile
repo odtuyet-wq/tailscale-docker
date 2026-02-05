@@ -7,10 +7,12 @@ RUN apt-get update && apt-get install -y \
     iproute2 \
     sudo \
     bash \
-    wget
+    wget \
+    tar
 
-# Cài đặt PocketBase (tải PocketBase bản mới nhất)
+# Cài đặt PocketBase (tải PocketBase bản mới nhất) và kiểm tra từng bước
 RUN wget https://github.com/pocketbase/pocketbase/releases/download/v0.8.0/pocketbase_0.8.0_linux_amd64.tar.gz && \
+    ls -alh && \
     tar -xvf pocketbase_0.8.0_linux_amd64.tar.gz && \
     mv pocketbase /usr/local/bin/ && \
     rm pocketbase_0.8.0_linux_amd64.tar.gz
@@ -26,4 +28,4 @@ CMD /bin/bash -c "\
     tailscaled && \
     tailscale up --authkey=$TAILSCALE_CLIENT_SECRET --hostname=pocketbase && \
     ip a show dev tailscale0 && \
-    pocketbase serve --http=0.0.0.0:8090"
+    /usr/local/bin/pocketbase serve --http=0.0.0.0:8090"
